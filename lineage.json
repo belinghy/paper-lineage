@@ -1,0 +1,99 @@
+[
+  {
+    "title": "Character Controllers Using Motion VAEs (2020)",
+    "description": "Parametric, model-then-control",
+    "link": "https://arxiv.org/pdf/2103.14274.pdf",
+    "children": [
+      {
+        "title": "Motion Fields for Interactive Character Locomotion (2010)",
+        "description": "Non-parametric, model-then-control",
+        "link": "https://grail.cs.washington.edu/projects/motion-fields/motion-fields.pdf",
+        "children": [
+          {
+            "title": "Motion Graphs (2002)",
+            "link": "https://research.cs.wisc.edu/graphics/Papers/Gleicher/Mocap/mograph.pdf",
+            "description": "Non-parametric, model-then-control"
+          }
+        ]
+      },
+      {
+        "title": "Mode-Adaptive Neural Networks for Quadruped Motion Control (2018)",
+        "description": "Parametric, direct-prediction",
+        "link": "https://homepages.inf.ed.ac.uk/tkomura/dog.pdf",
+        "children": [
+          {
+            "title": "Phase-Functioned Neural Networks for Character Control (2017)",
+            "description": "Parametric, direct-prediction",
+            "link": "http://theorangeduck.com/media/uploads/other_stuff/phasefunction.pdf",
+            "children": [
+              {
+                "title": "Motion Matching (2016)",
+                "description": "Non-parametric, direct-prediction",
+                "link": "https://www.gdcvault.com/play/1023280/Motion-Matching-and-The-Road"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "ALLSTEPS: Curriculum-driven Learning of Stepping Stone Skills (2020)",
+    "link": "https://arxiv.org/pdf/2005.04323.pdf",
+    "children": [
+      {
+        "title": "On Learning Symmetric Locomotion (2019)",
+        "link": "https://www.cs.ubc.ca/~van/papers/2019-MIG-symmetry/2019-MIG-symmetry.pdf",
+        "children": [
+          {
+            "title": "Learning Symmetric and Low-energy Locomotion (2018)",
+            "link": "https://arxiv.org/pdf/1801.08093.pdf"
+          }
+        ]
+      },
+      {
+        "title": "Iterative Reinforcement Learning Based Design of Dynamic Locomotion Skills for Cassie (2019)",
+        "link": "https://arxiv.org/pdf/1903.09537.pdf"
+      }
+    ]
+  },
+  {
+    "title": "On Learning Symmetric Locomotion (2019)",
+    "description": "DUP, NET methods",
+    "link": "https://www.cs.ubc.ca/~van/papers/2019-MIG-symmetry/2019-MIG-symmetry.pdf",
+    "children": [
+      {
+        "title": "Learning Symmetric and Low-energy Locomotion (2018)",
+        "description": "LOSS method",
+        "link": "https://arxiv.org/pdf/1801.08093.pdf"
+      },
+      {
+        "title": "DeepLoco: Dynamic Locomotion Skills Using Hierarchical Deep Reinforcement Learning (2017)",
+        "description": "PHASE method",
+        "link": "https://www.cs.ubc.ca/~van/papers/2017-TOG-deepLoco/2017-TOG-deepLoco.pdf"
+      }
+    ]
+  },
+  {
+    "title": "Local Motion Phases for Learning Multi-Contact Character Movements (2020)",
+    "link": "https://github.com/sebastianstarke/AI4Animation/blob/master/Media/SIGGRAPH_2020/Paper.pdf",
+    "children": [
+      {
+        "title": "Neural State Machine for Character-Scene Interactions (2019)",
+        "link": "https://github.com/sebastianstarke/AI4Animation/blob/master/Media/SIGGRAPH_Asia_2019/Paper.pdf",
+        "children": [
+          {
+            "title": "Mode-Adaptive Neural Networks for Quadruped Motion Control (2018)",
+            "link": "https://homepages.inf.ed.ac.uk/tkomura/dog.pdf",
+            "children": [
+              {
+                "title": "Phase-Functioned Neural Networks for Character Control (2017)",
+                "link": "http://theorangeduck.com/media/uploads/other_stuff/phasefunction.pdf"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Paper Lineage</title>
+
+    <style>
+      *,
+      ::before,
+      ::after {
+        box-sizing: border-box;
+        border-style: solid;
+        border-width: 0;
+      }
+
+      body {
+        font-size: calc(10px + 0.3vw);
+        line-height: 1.2;
+      }
+
+      main {
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 2rem 2.5rem;
+      }
+
+      ul {
+        list-style-type: none;
+        padding-left: 0;
+        margin: 0;
+      }
+
+      input {
+        width: 100%;
+        padding: 0.5rem 1rem;
+        border: 1px rgb(164, 202, 254);
+        border-style: solid;
+        border-radius: 0.3rem;
+        font-size: inherit;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: transparent;
+        box-shadow: 0 0 2pt 2pt orange;
+      }
+
+      .node {
+        cursor: pointer;
+      }
+
+      .node circle {
+        fill: #fff;
+        stroke: steelblue;
+        stroke-width: 3px;
+      }
+
+      .node text {
+        font: 12px sans-serif;
+      }
+
+      .link {
+        fill: none;
+        stroke: #ccc;
+        stroke-width: 2px;
+      }
+
+      .searchArea {
+        position: absolute;
+        z-index: 10;
+        width: 100%;
+        padding: 0;
+        overflow-y: scroll;
+        border: 1px rgb(164, 202, 254);
+        border-style: solid;
+        border-radius: 0.3rem;
+        text-align: right;
+      }
+
+      .searchItem {
+        cursor: pointer;
+        padding: 0.5rem;
+        border-style: solid;
+        border-top-width: 1px;
+        border-color: rgb(164, 202, 254);
+      }
+
+      .searchItem:hover,
+      .searchItem:focus {
+        background-color: rgb(229, 231, 235);
+      }
+
+      #searchBox {
+        position: relative;
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <div id="searchBox">
+        <input
+          id="searchBar"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Search for a paper"
+        />
+      </div>
+      <div id="svgContainer"></div>
+    </main>
+
+    <!-- load the d3.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+    <!-- Fuzzy search -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6"></script>
+
+    <script>
+      (async () => {
+        const pubData = await fetch("./lineage.json").then((response) => {
+          return response.json();
+        });
+
+        // ************** Setup search bar *****************
+        const fuse = new Fuse(pubData, {
+          // isCaseSensitive: false,
+          includeScore: true,
+          // shouldSort: true,
+          // includeMatches: false,
+          // findAllMatches: false,
+          minMatchCharLength: 3,
+          // location: 0,
+          // threshold: 0.6,
+          // distance: 100,
+          // useExtendedSearch: false,
+          // ignoreLocation: true,
+          // ignoreFieldNorm: false,
+          keys: ["title"],
+        });
+
+        // Load a random tree by default
+        drawTree(pubData[Math.floor(Math.random() * pubData.length)]);
+
+        const searchBox = document.getElementById("searchBox");
+        const searchBar = document.getElementById("searchBar");
+        
+        searchBar.addEventListener("keyup", search);
+        searchBar.addEventListener("click", search);
+        document.addEventListener("click", function (event) {
+          if (!searchBox.contains(event.target)) {
+            removeSearchArea();
+          }
+        });
+
+        document.addEventListener("keydown", function (event) {
+          // listen to keyboard events
+          if (searchBox.contains(event.target)) {
+            let list = searchBar.parentNode.lastChild.firstChild; // targets the <ul>
+            let first = list ? list.firstChild : searchBar; // targets the first <li>
+            switch (event.code) {
+              case "ArrowUp":
+                if (document.activeElement == (searchBar || first)) {
+                  break;
+                } else {
+                  let prev = document.activeElement.previousSibling;
+                  prev && prev.focus ? prev.focus() : null;
+                }
+                break;
+              case "ArrowDown":
+                if (document.activeElement == searchBar) {
+                  first.focus();
+                } else {
+                  let next = document.activeElement.nextSibling;
+                  next && next.focus ? next.focus() : null;
+                }
+                break;
+              case "Enter":
+                document.activeElement.onmousedown();
+                break;
+            }
+          }
+        });
+
+        // ************** Generate the tree diagram	*****************
+        function drawTree(root) {
+          const svgContainer = document.getElementById("svgContainer");
+
+          // Delete old tree
+          for (let i = 0; i < svgContainer.children.length; i++) {
+            if (svgContainer.children[i].tagName == "svg") {
+              svgContainer.children[i].remove();
+            }
+          }
+
+          const BWIDTH = 800;
+          const BHEIGHT = 600;
+          const DURATION = 750;
+
+          const margin = { top: 20, right: 120, bottom: 80, left: 120 };
+          const width = BWIDTH - margin.right - margin.left;
+          const height = BHEIGHT - margin.top - margin.bottom;
+
+          let tree = d3.layout.tree().size([height, width]);
+
+          let diagonal = d3.svg.diagonal().projection(function (d) {
+            return [d.y, d.x];
+          });
+
+          let svg = d3
+            .select("#svgContainer")
+            .append("svg")
+            .attr("preserveAspectRatio", "xMinYMin meet")
+            .attr("viewBox", `0 0 ${BWIDTH} ${BHEIGHT}`)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+          root.x0 = height / 2;
+          root.y0 = 0;
+
+          update(root);
+
+          function update(source) {
+            // Compute the new tree layout.
+            let nodes = tree.nodes(root).reverse();
+            let links = tree.links(nodes);
+
+            // Normalize for fixed-depth.
+            nodes.forEach((d) => (d.y = d.depth * 180));
+
+            // Update the nodes…
+            let node = (() => {
+              let i = 0;
+              return svg
+                .selectAll("g.node")
+                .data(nodes, (d) => d.id || (d.id = ++i));
+            })();
+
+            // Enter any new nodes at the parent's previous position.
+            let nodeEnter = node
+              .enter()
+              .append("g")
+              .attr("class", "node")
+              .attr("transform", (d) => `translate(${source.y0},${source.x0})`)
+              .on("click", (d) => (d.link && d3.event.ctrlKey ? (window.location = d.link) : null));
+
+            nodeEnter.append("circle").attr("r", 1e-6).style("fill", "#fff");
+
+            nodeEnter
+              .append("text")
+              .attr("x", 0)
+              .attr("y", "2.5em")
+              .attr("text-anchor", "middle")
+              .text(function (d) {
+                let more = d.description ? ` \n (${d.description})` : "";
+                return `${d.title}${more}`;
+              })
+              .call(wrap, 160);
+
+            // Transition nodes to their new position.
+            let nodeUpdate = node
+              .transition()
+              .duration(DURATION)
+              .attr("transform", (d) => `translate(${d.y},${d.x})`);
+
+            nodeUpdate.select("circle").attr("r", 10).style("fill", "#fff");
+            nodeUpdate.select("text").style("fill-opacity", 1);
+
+            // Update the links…
+            let link = svg
+              .selectAll("path.link")
+              .data(links, (d) => d.target.id);
+
+            // Enter any new links at the parent's previous position.
+            link
+              .enter()
+              .insert("path", "g")
+              .attr("class", "link")
+              .attr("d", function (d) {
+                let o = { x: source.x0, y: source.y0 };
+                return diagonal({ source: o, target: o });
+              });
+
+            // Transition links to their new position.
+            link.transition().duration(DURATION).attr("d", diagonal);
+          }
+
+          function wrap(text, width) {
+            text.each(function () {
+              let text = d3.select(this),
+                words = text.text().split(" ").reverse(),
+                word,
+                line = [],
+                lineNumber = 0,
+                lineHeight = 1.1, // ems
+                x = text.attr("x"),
+                y = text.attr("y"),
+                dy = 0, //parseFloat(text.attr("dy")),
+                tspan = text
+                  .text(null)
+                  .append("tspan")
+                  .attr("x", x)
+                  .attr("y", y)
+                  .attr("dy", dy + "em")
+                  .style("font-size", "13.5px");
+              while ((word = words.pop())) {
+                line.push(word);
+                tspan.text(line.join(" "));
+                if (
+                  tspan.node().getComputedTextLength() > width ||
+                  word == "\n"
+                ) {
+                  line.pop();
+                  tspan.text(line.join(" "));
+                  line = [word];
+                  tspan = text
+                    .append("tspan")
+                    .attr("x", x)
+                    .attr("y", y)
+                    .attr("dy", ++lineNumber * lineHeight + dy + "em")
+                    .text(word)
+                    .style("font-size", "13.5px");
+                }
+              }
+            });
+          }
+        }
+      
+        function search(event) {
+          const searchString = event.target.value;
+
+          removeSearchArea();
+
+          if (searchString.length >= 3) {
+            const results = fuse.search(searchString);
+
+            if (results.length > 0) {
+              const resultArea = document.createElement("div");
+              resultArea.className = "searchArea";
+
+              const resultList = document.createElement("ul");
+
+              for (let i = 0; i < results.length; i++) {
+                const resultItem = document.createElement("li");
+                resultItem.className = "searchItem";
+                resultItem.tabIndex = 0;
+                resultItem.onmousedown = function (event) {
+                  drawTree(results[i].item);
+                  removeSearchArea();
+                };
+
+                const itemTitle = document.createElement("div");
+                itemTitle.innerText = results[i].item.title;
+
+                resultItem.appendChild(itemTitle);
+                resultList.appendChild(resultItem);
+              }
+              resultArea.appendChild(resultList);
+              searchBox.appendChild(resultArea);
+            }
+          }
+        }
+
+        function removeSearchArea() {
+          let searchAreas = document.getElementsByClassName("searchArea");
+          for (let i = 0; i < searchAreas.length; i++) {
+            searchAreas[i].remove();
+          }
+        }
+
+      })();
+    </script>
+  </body>
+</html>
