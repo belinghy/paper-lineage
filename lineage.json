@@ -38,6 +38,30 @@
     ]
   },
   {
+    "title": "Learned Motion Matching (2020)",
+    "description": "Parametric, direct-prediction",
+    "link": "https://static-wordpress.akamaized.net/montreal.ubisoft.com/wp-content/uploads/2020/07/09154101/Learned_Motion_Matching.pdf",
+    "children": [
+      {
+        "title": "Mode-Adaptive Neural Networks for Quadruped Motion Control (2018)",
+        "description": "Parametric, direct-prediction",
+        "link": "https://homepages.inf.ed.ac.uk/tkomura/dog.pdf",
+        "children": [
+          {
+            "title": "Phase-Functioned Neural Networks for Character Control (2017)",
+            "description": "Parametric, direct-prediction",
+            "link": "http://theorangeduck.com/media/uploads/other_stuff/phasefunction.pdf"
+          }
+        ]
+      },
+      {
+        "title": "Motion Matching (2016)",
+        "description": "Non-parametric, direct-prediction",
+        "link": "https://www.gdcvault.com/play/1023280/Motion-Matching-and-The-Road"
+      }
+    ]
+  },
+  {
     "title": "ALLSTEPS: Curriculum-driven Learning of Stepping Stone Skills (2020)",
     "link": "https://arxiv.org/pdf/2005.04323.pdf",
     "children": [

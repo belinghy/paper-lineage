@@ -11,7 +11,7 @@ Paper Lineage is designed for finding only a handful of most relevant papers whe
 ## Data & Contribution
 
 The data is manually curated and stored as a [JSON file](https://github.com/belinghy/paper-lineage/blob/main/lineage.json).
-Please make a pull request if you would like to contribute, or open an issue to request for papers.
+Please contribute by making a pull request, or open an issue to request for papers.
 
 Before making a pull request, please make sure to read the following guidelines for creating lineage trees.
 
