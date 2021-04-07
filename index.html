@@ -281,7 +281,7 @@
             .append("g")
             .attr("class", "node")
             .attr("transform", (d) => `translate(${source.y0},${source.x0})`)
-            .on("click", (d) => (d.link && d3.event.ctrlKey ? (window.location = d.link) : null));
+            .on("click", (d) => (d.link ? (window.location = d.link) : null));
 
           nodeEnter.append("circle").attr("r", 1e-6).style("fill", "#fff");
 
