@@ -91,26 +91,6 @@
         box-shadow: 0 0 2pt 2pt orange;
       }
 
-      .node {
-        cursor: pointer;
-      }
-
-      .node circle {
-        fill: #fff;
-        stroke: var(--ac1-color);
-        stroke-width: 3px;
-      }
-
-      .node text {
-        font: 12px sans-serif;
-      }
-
-      .link {
-        fill: none;
-        stroke: #ccc;
-        stroke-width: 2px;
-      }
-
       .searchArea {
         position: absolute;
         z-index: 10;
@@ -227,6 +207,7 @@
           const svgContainer = document.getElementById("svgContainer");
 
           // Delete old tree
+          window.svgContainer = svgContainer;
           for (let i = 0; i < svgContainer.children.length; i++) {
             if (svgContainer.children[i].tagName == "svg") {
               svgContainer.children[i].remove();
@@ -245,22 +226,10 @@
 
           let diagonal = function link(d) {
             return (
-              "M" +
-              d.source.y +
-              "," +
-              d.source.x +
-              "C" +
-              (d.source.y + d.target.y) / 2 +
-              "," +
-              d.source.x +
-              " " +
-              (d.source.y + d.target.y) / 2 +
-              "," +
-              d.target.x +
-              " " +
-              d.target.y +
-              "," +
-              d.target.x
+              `M${d.source.y},${d.source.x}` +
+              `C${(d.source.y + d.target.y) / 2},${d.source.x} ` +
+              `${(d.source.y + d.target.y) / 2},${d.target.x} ` +
+              `${d.target.y},${d.target.x}`
             );
           };
 
@@ -298,30 +267,37 @@
               .enter()
               .append("g")
               .attr("class", "node")
+              .attr("cursor", "pointer")
               .attr("transform", (d) => `translate(${source.y0},${source.x0})`)
               .on("click", (d) => (d.link ? (window.location = d.link) : null));
 
-            nodeEnter.append("circle").attr("r", 1e-6).style("fill", "#fff");
+            nodeEnter
+              .append("circle")
+              .attr("r", 1e-6)
+              .attr("fill", "#fff")
+              .attr("stroke", "steelblue")
+              .attr("stroke-width", 3);
 
             nodeEnter
               .append("text")
               .attr("x", 0)
               .attr("y", "2.5em")
               .attr("text-anchor", "middle")
+              .attr("font-family", "sans-serif")
+              .attr("font-size", "13.5px")
               .text(function (d) {
-                let more = d.description ? ` \n (${d.description})` : "";
+                const more = d.description ? ` \n (${d.description})` : "";
                 return `${d.title}${more}`;
               })
               .call(wrap, 160);
 
-            // Transition nodes to their new position.
+            nodeEnter.attr("transform", (d) => `translate(${d.y},${d.x})`);
+
             let nodeUpdate = node
+              .select("circle")
               .transition()
               .duration(DURATION)
-              .attr("transform", (d) => `translate(${d.y},${d.x})`);
-
-            nodeUpdate.select("circle").attr("r", 10).style("fill", "#fff");
-            nodeUpdate.select("text").style("fill-opacity", 1);
+              .attr("r", 10);
 
             // Update the links…
             let link = svg
@@ -333,13 +309,10 @@
               .enter()
               .insert("path", "g")
               .attr("class", "link")
-              .attr("d", function (d) {
-                let o = { x: source.x0, y: source.y0 };
-                return diagonal({ source: o, target: o });
-              });
-
-            // Transition links to their new position.
-            link.transition().duration(DURATION).attr("d", diagonal);
+              .attr("stroke", "#ccc")
+              .attr("fill", "none")
+              .attr("stroke-width", "2px")
+              .attr("d", diagonal);
           }
 
           function wrap(text, width) {
@@ -358,8 +331,7 @@
                   .append("tspan")
                   .attr("x", x)
                   .attr("y", y)
-                  .attr("dy", dy + "em")
-                  .style("font-size", "13.5px");
+                  .attr("dy", dy + "em");
               while ((word = words.pop())) {
                 line.push(word);
                 tspan.text(line.join(" "));
@@ -375,8 +347,7 @@
                     .attr("x", x)
                     .attr("y", y)
                     .attr("dy", ++lineNumber * lineHeight + dy + "em")
-                    .text(word)
-                    .style("font-size", "13.5px");
+                    .text(word);
                 }
               }
             });
@@ -421,8 +392,8 @@
 
         function removeSearchArea() {
           let searchAreas = document.getElementsByClassName("searchArea");
-          for (let i = 0; i < searchAreas.length; i++) {
-            searchAreas[i].remove();
+          for (const area of searchAreas) {
+            area.remove();
           }
         }
       })();
