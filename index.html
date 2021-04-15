@@ -151,13 +151,34 @@
 
         // ************** Setup search bar *****************
         const fuse = new Fuse(pubData, {
-          includeScore: true,
+          // includeScore: true,
           minMatchCharLength: 3,
           keys: ["title"],
         });
 
+        function drawAndSetHistory(tree, replace = false) {
+          drawTree(tree);
+          const url = new URL(window.location);
+          url.searchParams.set("title", tree.title);
+          document.title = `Paper Lineage | ${tree.title}`;
+          window.history[replace ? "replaceState" : "pushState"](tree, "", url);
+        }
+
         // Load a random tree by default
-        drawTree(pubData[Math.floor(Math.random() * pubData.length)]);
+        const tree = pubData[Math.floor(Math.random() * pubData.length)];
+        drawAndSetHistory(tree, true);
+
+        window.addEventListener(
+          "popstate",
+          function (event) {
+            const tree =
+              event.state ||
+              pubData[Math.floor(Math.random() * pubData.length)];
+            drawTree(tree);
+            document.title = `Paper Lineage | ${tree.title}`;
+          },
+          false
+        );
 
         const searchBox = document.getElementById("searchBox");
         const searchBar = document.getElementById("searchBar");
@@ -368,13 +389,13 @@
 
               const resultList = document.createElement("ul");
 
-              const maxItems = Math.min(results.length, 8);
+              const maxItems = Math.min(results.length, 6);
               for (let i = 0; i < maxItems; i++) {
                 const resultItem = document.createElement("li");
                 resultItem.className = "searchItem";
                 resultItem.tabIndex = 0;
                 resultItem.onmousedown = function (event) {
-                  drawTree(results[i].item);
+                  drawAndSetHistory(results[i].item);
                   removeSearchArea();
                 };
 
