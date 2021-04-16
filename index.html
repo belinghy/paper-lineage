@@ -149,7 +149,6 @@
           return response.json();
         });
 
-        // ************** Setup search bar *****************
         const fuse = new Fuse(pubData, {
           // includeScore: true,
           minMatchCharLength: 3,
@@ -164,8 +163,12 @@
           window.history[replace ? "replaceState" : "pushState"](tree, "", url);
         }
 
-        // Load a random tree by default
-        const tree = pubData[Math.floor(Math.random() * pubData.length)];
+        // Load a random tree by default, unless url has search parameter
+        const params = new URLSearchParams(window.location.search);
+        const title = params.get("title");
+        const tree = title
+          ? fuse.search(title)[0].item
+          : pubData[Math.floor(Math.random() * pubData.length)];
         drawAndSetHistory(tree, true);
 
         window.addEventListener(
