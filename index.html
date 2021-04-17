@@ -93,6 +93,7 @@
         outline: none;
         border-color: transparent;
         box-shadow: 0 0 2pt 2pt orange;
+        -webkit-appearance: none;
       }
 
       .searchArea {
@@ -120,6 +121,19 @@
       .searchItem:focus {
         background-color: rgb(229, 231, 235);
       }
+
+      @keyframes expand {
+        0% {
+          r: 0;
+        }
+        100% {
+          r: 10;
+        }
+      }
+
+      circle {
+        animation: expand 0.5s ease;
+      }
     </style>
   </head>
 
@@ -142,9 +156,7 @@
       <div id="svgContainer"></div>
     </main>
 
-    <!-- load the d3.js library -->
-    <script src="/assets/d3.min.js"></script>
-    <!-- Fuzzy search -->
+    <script src="/assets/d3.custom.min.js"></script>
     <script src="/assets/fuse.min.js"></script>
 
     <script>
@@ -244,13 +256,12 @@
 
           const BWIDTH = 800;
           const BHEIGHT = 600;
-          const DURATION = 750;
 
           const margin = { top: 20, right: 120, bottom: 80, left: 120 };
           const width = BWIDTH - margin.right - margin.left;
           const height = BHEIGHT - margin.top - margin.bottom;
 
-          let tree = d3.layout.tree().size([height, width]);
+          let tree = d3.tree().size([height, width]);
 
           let diagonal = function link(d) {
             return (
@@ -276,8 +287,10 @@
 
           function update(source) {
             // Compute the new tree layout.
-            let nodes = tree.nodes(root).reverse();
-            let links = tree.links(nodes);
+            const treeRoot = d3.hierarchy(root);
+            tree(treeRoot);
+            const nodes = treeRoot.descendants().reverse();
+            const links = treeRoot.links();
 
             // Normalize for fixed-depth.
             nodes.forEach((d) => (d.y = d.depth * 180));
@@ -297,11 +310,13 @@
               .attr("class", "node")
               .attr("cursor", "pointer")
               .attr("transform", (d) => `translate(${source.y0},${source.x0})`)
-              .on("click", (d) => (d.link ? (window.location = d.link) : null));
+              .on("click", (e, d) =>
+                d.data.link ? (window.location = d.data.link) : null
+              );
 
             nodeEnter
               .append("circle")
-              .attr("r", 1e-6)
+              .attr("r", 10)
               .attr("fill", "#fff")
               .attr("stroke", "steelblue")
               .attr("stroke-width", 3);
@@ -314,18 +329,16 @@
               .attr("font-family", "sans-serif")
               .attr("font-size", "13.5px")
               .text(function (d) {
-                const more = d.description ? ` \n (${d.description})` : "";
-                return `${d.title}${more}`;
+                const more = d.data.description
+                  ? ` \n (${d.data.description})`
+                  : "";
+                return `${d.data.title}${more}`;
               })
               .call(wrap, 160);
 
             nodeEnter.attr("transform", (d) => `translate(${d.y},${d.x})`);
 
-            let nodeUpdate = node
-              .select("circle")
-              .transition()
-              .duration(DURATION)
-              .attr("r", 10);
+            window.node = node;
 
             // Update the links…
             let link = svg
