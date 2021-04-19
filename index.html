@@ -20,7 +20,7 @@
     />
     <style>
       :root {
-        --ac1-color: steelblue;
+        --ac1-color: #2b4ec4;
         --ac2-color: rgb(164, 202, 254);
         --bg-color: #fff;
         --fg-color: rgb(18, 19, 20);
@@ -40,6 +40,7 @@
         background: var(--bg-color);
         font-size: calc(10px + 0.3vw);
         line-height: 1.2;
+        font-family: sans-serif;
       }
 
       a {
@@ -73,6 +74,11 @@
         background-color: var(--bg-color);
         max-width: var(--max-content-width);
         min-height: 90vh;
+      }
+
+      p {
+        font-size: 1em;
+        line-height: 1.4;
       }
 
       ul {
@@ -123,12 +129,8 @@
       }
 
       @keyframes expand {
-        0% {
-          r: 0;
-        }
-        100% {
-          r: 10;
-        }
+        0% { r: 0; }
+        100% { r: 10; }
       }
 
       circle {
@@ -139,9 +141,9 @@
 
   <body>
     <nav>
-      <a href="/">Home</a>
+      <a href="/">Random</a>
       /
-      <a href="https://github.com/belinghy/paper-lineage">About</a>
+      <a href="https://github.com/belinghy/paper-lineage">GitHub</a>
       /
     </nav>
     <main id="home">
@@ -154,6 +156,9 @@
         />
       </div>
       <div id="svgContainer"></div>
+      <div style="border-top: 4px dotted #000; width: 80%; margin: 0 auto; text-align: center;">
+        <p>Paper Lineage is a tool for finding the lineage of academic papers. The main usage is to quickly visualize papers and their direct influences. The data is manually curated and often provided by the authors. Please help contribute by adding papers to our <a href="https://github.com/belinghy/paper-lineage/blob/main/lineage.json">database</a>.</p>
+      </div>
     </main>
 
     <script src="/assets/d3.custom.min.js"></script>
@@ -318,7 +323,7 @@
               .append("circle")
               .attr("r", 10)
               .attr("fill", "#fff")
-              .attr("stroke", "steelblue")
+              .attr("stroke", "#2b4ec4")
               .attr("stroke-width", 3);
 
             nodeEnter
