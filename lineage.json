@@ -119,5 +119,65 @@
         ]
       }
     ]
+  },
+  {
+    "title": "Learning Locomotion Skills for Cassie: Iterative Design and Sim-to-Real (2019)",
+    "link": "https://zhaomingxie.github.io/publications/corl_2019.pdf",
+    "children": [
+      {
+        "title": "Feedback Control for Cassie With Deep Reinforcement Learning (2018)",
+        "link": "https://arxiv.org/pdf/1803.05580.pdf",
+        "children": [
+          {
+            "title": "DeepMimic: Example-Guided Deep Reinforcement Learning of Physics-Based Character Skills (2018)",
+            "link": "https://arxiv.org/pdf/1804.02717.pdf",
+            "children": [
+              {
+                "title": "DeepLoco: Dynamic Locomotion Skills Using Hierarchical Deep Reinforcement Learning (2017)",
+                "link": "https://www.cs.ubc.ca/~van/papers/2017-TOG-deepLoco/2017-TOG-deepLoco.pdf"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Dynamics Randomization Revisited: A Case Study for Quadrupedal Locomotion (2021)",
+    "link": "https://arxiv.org/pdf/2011.02404.pdf",
+    "children": [
+      {
+        "title": "Learning Agile Robotic Locomotion Skills by Imitating Animals (2020)",
+        "link": "https://arxiv.org/pdf/2004.00784.pdf",
+        "children": [
+          {
+            "title": "DeepMimic: Example-Guided Deep Reinforcement Learning of Physics-Based Character Skills (2018)",
+            "link": "https://arxiv.org/pdf/1804.02717.pdf"
+          }
+        ]
+      },
+      {
+        "title": "Sim-to-Real Transfer of Robotic Control with Dynamics Randomization (2018)",
+        "link": "https://arxiv.org/pdf/1710.06537.pdf"
+      },
+      {
+        "title": "Learning Agile and Dynamic Motor Skills for Legged Robots (2019)",
+        "link": "https://arxiv.org/pdf/1901.08652.pdf"
+      }
+    ]
+  },
+  {
+    "title": "Learning a Contact-Adaptive Controller for Robust, Efficient Legged Locomotion (2020)",
+    "link": "https://arxiv.org/pdf/2009.10019.pdf",
+    "children": [
+      {
+        "title": "Dynamic Locomotion in the MIT Cheetah 3 Through Convex Model-Predictive Control (2018)",
+        "link": "https://ieeexplore.ieee.org/document/8594448"
+      },
+      {
+        "title": "Discovery of Complex Behaviors Through Contact-Invariant Optimization (2012)",
+        "link": "https://homes.cs.washington.edu/~todorov/papers/MordatchSIGGRAPH12.pdf"
+      }
+    ]
   }
 ]
