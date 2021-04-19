@@ -155,8 +155,10 @@
           placeholder="Search for a paper"
         />
       </div>
-      <div id="svgContainer"></div>
-      <div style="border-top: 4px dotted #000; width: 80%; margin: 0 auto; text-align: center;">
+      <div style="position: relative; padding-bottom: 75%;">
+        <div id="svgContainer" width="800" height="600" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0;"></div>
+      </div>
+      <div style="border-top: 4px dotted #000; width: 80%; margin: 1em auto; text-align: center;">
         <p>Paper Lineage is a tool for finding the lineage of academic papers. The main usage is to quickly visualize papers and their direct influences. The data is manually curated and often provided by the authors. Please help contribute by adding papers to our <a href="https://github.com/belinghy/paper-lineage/blob/main/lineage.json">database</a>.</p>
       </div>
     </main>
@@ -252,15 +254,14 @@
           const svgContainer = document.getElementById("svgContainer");
 
           // Delete old tree
-          window.svgContainer = svgContainer;
           for (let i = 0; i < svgContainer.children.length; i++) {
             if (svgContainer.children[i].tagName == "svg") {
               svgContainer.children[i].remove();
             }
           }
 
-          const BWIDTH = 800;
-          const BHEIGHT = 600;
+          const BWIDTH = parseInt(svgContainer.getAttribute("width"));
+          const BHEIGHT = parseInt(svgContainer.getAttribute("height"));
 
           const margin = { top: 20, right: 120, bottom: 80, left: 120 };
           const width = BWIDTH - margin.right - margin.left;
