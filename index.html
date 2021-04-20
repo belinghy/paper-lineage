@@ -27,7 +27,7 @@
         --ac2-color: rgb(164, 202, 254);
         --bg-color: #fff;
         --fg-color: rgb(18, 19, 20);
-        --max-content-width: 880px;
+        --max-content-width: 800px;
       }
 
       *,
@@ -60,22 +60,23 @@
         top: 0;
         left: 0;
         right: 0;
-        width: 80vw;
+        width: 90vw;
+        padding-left: 0;
+        padding-right: 0;
+        max-width: var(--max-content-width);
       }
 
       nav {
         font-weight: bold;
         line-height: 2.2;
         font-size: 1.3em;
-        padding: 2rem 2.5rem;
-        max-width: var(--max-content-width);
+        padding-top: 2em;
         z-index: 100;
       }
 
       main {
-        padding: 6em 2.5rem;
+        padding-top: 6em;
         background-color: var(--bg-color);
-        max-width: var(--max-content-width);
         min-height: 90vh;
       }
 
