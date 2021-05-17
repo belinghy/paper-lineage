@@ -179,5 +179,27 @@
         "link": "https://homes.cs.washington.edu/~todorov/papers/MordatchSIGGRAPH12.pdf"
       }
     ]
+  },
+  {
+    "title": "Designers Characterize Naturalness in Voice User Interfaces: Their Goals, Practices, and Challenges (2021)",
+    "description": "naturalness, voice user interface, smart home",
+    "link": "https://dl.acm.org/doi/10.1145/3411764.3445579",
+    "children": [
+      {
+        "title": "What Makes a Good Conversation? Challenges in Designing Truly Conversational Agents (2019)",
+        "link": "https://dl.acm.org/doi/10.1145/3290605.3300705",
+        "description": "conversational voice user interface"
+      },
+      {
+        "title": "Natural User Interfaces Are Not Natural (2010)",
+        "link": "https://dl.acm.org/doi/10.1145/1744161.1744163",
+        "description": "natural user interface"
+      } ,
+      {
+        "title": "'I Don't Know What You're Talking about, HALexa': The Case for Voice User Interface Guidelines (2019)",
+        "link": "https://dl.acm.org/doi/10.1145/3342775.3342795",
+        "description": "voice user interface guidelines"
+      } 
+    ]
   }
 ]
